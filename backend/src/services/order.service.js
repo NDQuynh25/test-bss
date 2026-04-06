@@ -8,9 +8,19 @@ const END_HOUR = 11;
 
 export class OrderService {
   
+  
   isFlashSaleTime() {
-    const hour = new Date().getHours();
-    return hour >= START_HOUR && hour < END_HOUR;
+    const now = new Date();
+    
+    
+    const start = new Date(now);
+    start.setHours(START_HOUR, 0, 0, 0);
+    
+   
+    const end = new Date(now);
+    end.setHours(END_HOUR, 0, 0, 0);
+    
+    return now >= start && now < end;
   }
 
   
