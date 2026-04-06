@@ -1,0 +1,51 @@
+# Node modules
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build / dist
+dist/
+build/
+.next/
+out/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Logs
+logs
+*.log
+
+
+.DS_Store
+Thumbs.db
+
+
+.vscode/
+.idea/
+
+
+.shopify/
+.shopify-cli.yml
+
+
+config/settings_data.json
+
+
+.cache/
+.tmp/
+
+
+coverage/
+
+
+*.swp
+
+
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
