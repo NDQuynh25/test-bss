@@ -1,46 +1,28 @@
-// worker.js
 import { Worker } from 'bullmq';
-import redisConnection from './redis-config.js'; // Lưu ý thêm .js nếu là ESM
+import { PrismaClient } from '@prisma/client';
+import redisConnection from '../config/redis-config.js';
 
-// Khởi tạo Worker lắng nghe Queue 'flash-sale-orders'
-const orderWorker = new Worker(
-  'flash-sale-orders',
-  async (job) => {
-    const { userId, productId, priceSnapshot } = job.data;
+const prisma = new PrismaClient();
 
-    console.log(`[Worker] Đang xử lý đơn hàng của User: ${userId}...`);
 
-    try {
-      
-
-      // Trả về kết quả nếu thành công
-      return { status: 'success', orderId: `ORD-${Date.now()}` };
-    } catch (error) {
-      
-      console.error(`[Worker] Lỗi khi lưu DB cho User ${userId}:`, error.message);
-      throw error;
-    }
-  },
-  {
-    connection: redisConnection,
-
+const orderWorker = new Worker('flash-sale-orders', async (job) => {
     
-    concurrency: 50, // Cho phép Worker xử lý đồng thời 50 đơn hàng cùng lúc
+    const { phone } = job.data;
+    
+    try {
+        
+        const order = await prisma.sale.create({
+            data: { phone }
+        });
+        
+        console.log(`Success save order: ${phone}`);
+        return order;
 
-    limiter: {
-      max: 200, // Giới hạn tốc độ: Xử lý TỐI ĐA 200 đơn hàng
-      duration: 1000, // Trong vòng 1000ms (1 giây). Giúp bảo vệ DB không bị quá tải.
-    },
-  }
-);
-
-// Lắng nghe các sự kiện của Worker
-orderWorker.on('completed', (job, returnvalue) => {
-  console.log(`[Success] Job ${job.id} - Order ID: ${returnvalue.orderId}`);
-});
-
-orderWorker.on('failed', (job, err) => {
-  console.log(
-    `Error: ${err.message}`
-  );
+    } catch (error) {
+        console.error(`❌ Error save order: ${phone}:`, error);
+        throw error; 
+    }
+}, {
+    connection: redisConnection,
+    concurrency: 10, 
 });
