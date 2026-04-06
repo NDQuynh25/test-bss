@@ -1,6 +1,6 @@
 import { Worker } from 'bullmq';
 import { PrismaClient } from '@prisma/client';
-import redisConnection from '../config/redis-config.js';
+import redisConnection from '../configs/redis-config.js';
 
 const prisma = new PrismaClient();
 

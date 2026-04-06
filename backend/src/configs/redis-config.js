@@ -1,5 +1,5 @@
 
-const { Redis } = require('ioredis');
+import { Redis } from 'ioredis';
 
 const redisConnection = new Redis({
   host: '127.0.0.1', 
