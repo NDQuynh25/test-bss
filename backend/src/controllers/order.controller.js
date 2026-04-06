@@ -34,5 +34,5 @@ class OrderController {
   };
 }
 
-// Xuất instance của controller ra cho router dùng
+
 export const orderController = new OrderController();
